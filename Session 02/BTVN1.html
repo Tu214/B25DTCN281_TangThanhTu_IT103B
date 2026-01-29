@@ -9,13 +9,13 @@
     <script>
         let nameBook = prompt("Tên sách");
         let authorName = prompt("Tên tác giả");
-        let yearBook = +prompt("Năm xuất bản");
+        let yearBooks = +prompt("Năm xuất bản");
         console.log(`Tên sách: ${nameBook}`);
         console.log(`Tên tác giả: ${authorName}`);
 
-        if (yearBook === 2026) {
+        if (yearBooks === 2026) {
             console.log("Đây là sách mới");
-        }else if (2026 - yearBook <= 5) {
+        }else if (2026 - yearBooks <= 5) {
             console.log("Sách khá mới");
         }else{
             console.log("Đây là sách cũ");
