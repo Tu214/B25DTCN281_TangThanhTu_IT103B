@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let fullName = prompt("Nhập tên người dùng:");
+        let roleInput = prompt("Nhập vai trò (admin, student, guest):");
+        let balance = +prompt("Nhập số dư tài khoản thẻ:");
+        let isCardActive = prompt("Nhập trạng thái thẻ (Nhập 'true' để kích hoạt, để trống nếu khóa):");
+        let overdueDays = +prompt("Nhập số ngày quá hạn:");
+
+        let permissionMsg = "";
+        switch (roleInput) {
+            case "admin":
+                permissionMsg = "Chào Admin, bạn có toàn quyền hệ thống";
+                break;
+            case "student":
+                permissionMsg = "Chào sinh viên, bạn có thể mượn sách";
+                break;
+            case "guest":
+                permissionMsg = "Chào khách, bạn chỉ có thể đọc tại chỗ";
+                break;
+            default:
+                permissionMsg = "Lỗi: Vai trò không hợp lệ!";
+        }
+
+        let canBorrow = false;
+        let borrowResult = "";
+
+        if (fullName && (roleInput === "admin" || roleInput === "student") && balance > 0 && isCardActive === "true") {
+            canBorrow = true;
+            borrowResult = "ĐƯỢC PHÉP MƯỢN SÁCH";
+        } else {
+            borrowResult = "YÊU CẦU BỊ TỪ CHỐI";
+        }
+
+        let fine = 0;
+        let returnStatus = "";
+
+        if (overdueDays <= 0) {
+            returnStatus = "Trả đúng hạn";
+        } else {
+            returnStatus = `Quá hạn ${overdueDays} ngày`;
+            if (overdueDays <= 5) {
+                fine = overdueDays * 5000;
+            } else if (overdueDays <= 10) {
+                fine = overdueDays * 10000;
+            } else {
+                fine = 200000;
+                returnStatus += " - TÀI KHOẢN BỊ KHÓA";
+            }
+        }
+
+        console.log(
+            `
+            --- HỆ THỐNG MƯỢN TRẢ ---
+            Người dùng: ${fullName}
+            Quyền hạn: ${permissionMsg}
+            Kết quả mượn: ${borrowResult}
+            Tình trạng trả sách: ${ returnStatus }
+            Tiền phạt: ${ fine.toLocaleString() } VNĐ
+            `
+        );
+
+    </script>
+</body>
+
+</html>
