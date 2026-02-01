@@ -1,0 +1,42 @@
+<script>
+    let borrowing;
+    do {
+        borrowing = +prompt("Hôm nay có bao nhiêu lượt trả sách?");
+        if (isNaN(borrowing) || !Number.isInteger(borrowing) || borrowing <= 0) {
+            alert("Giá trị không hợp lệ vui lòng nhập lại");
+        }
+    } while (isNaN(borrowing) || !Number.isInteger(borrowing) || borrowing <= 0);
+
+    let lateCount = 0;
+
+    for (let i = 1; i <= borrowing; i++) {
+        alert(`--- Người trả thứ ${i} ---`);
+        let name = prompt("Tên người trả:");
+        let book = prompt("Tên sách:");
+        let days;
+
+        while (true) {
+            days = +prompt("Số ngày mượn thực tế:");
+            if (!isNaN(days) && days >= 1) {
+                break; 
+            }
+            alert("Lỗi: Số ngày phải >= 1. Vui lòng nhập lại!");
+        }
+        if (days <= 14) {
+            alert("Kết quả: Trả đúng hạn");
+        } else if (days <= 21) {
+            alert("Kết quả: Trả muộn nhẹ. Phạt nhắc nhở");
+            lateCount++;
+        } else {
+            alert("Kết quả: Quá hạn nghiêm trọng. Cần ghi biên bản phạt");
+            lateCount++;
+        }
+    }
+
+    alert(
+        `
+        Tổng số lượt trả: ${borrowing}
+        Số lượt trả muộn: ${lateCount}
+        `
+    )
+</script>

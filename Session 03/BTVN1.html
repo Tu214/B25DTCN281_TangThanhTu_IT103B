@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let borrowing
+        do {
+            borrowing = +prompt("Hôm nay có bao nhiêu lượt mượn sách?");
+            if (isNaN(borrowing) || !Number.isInteger(borrowing) || borrowing <= 0) {
+                 alert("Giá trị không hợp lệ vui lòng nhập lại");
+            }
+        } while (isNaN(borrowing) || !Number.isInteger(borrowing) || borrowing <= 0);
+        let namePeople
+        let nameBook
+        let borrowingDate
+        for (let i = 1; i < borrowing; i++) {
+            alert(`Người mượn ${i}`);
+            namePeople = prompt("Tên người mượn");
+            nameBook = prompt("Tên ngưởi mượn");
+            borrowingDate = +prompt("Số ngày mượn");
+            if (borrowingDate > 14) {
+                alert("Cảnh báo: Thời gian mượn vượt quy định (tối đa 14 ngày)");
+            }
+            if (borrowingDate <= 14) {
+                alert( "Mượn thành công");
+            }
+        }
+    </script>
+</body>
+</html>

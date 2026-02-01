@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let feedback = 0;
+        let seriousComplaint = 0;
+        let averageComplaints = 0;
+        let minorComplaint = 0;
+        let improve = 0;
+        let feepositiveFeedbackdback = 0;
+
+        while (true) {
+            let request = prompt("Có khiếu nại/phản hồi mới từ bạn đọc không? (có/không)").trim().toLowerCase();
+            if (request === "không") {
+                break;
+            } else if (request !== "có") {
+                alert("Chỉ nhập có & không");
+                continue
+            }
+            let namePeople
+            while (true) {
+                namePeople = prompt("Tên bạn đọc (không được để trống)").trim().toLowerCase();
+                if (namePeople !== "") {
+                    break
+                }
+                alert("Tên không được để trống");
+            }
+            let cardId = prompt("Mã thẻ bạn đọc");
+            let TypeOfFeedback
+            let SeverityLevel
+            while (true) {
+                TypeOfFeedback = +prompt(
+                `
+                1 = Phàn nàn / Khiếu nại 
+                2 = Đề xuất cải thiện 
+                3 = Phản hồi tích cực / Khen ngợi
+                `
+                )
+
+                if (TypeOfFeedback === 1) {
+                    while (true) {
+                        SeverityLevel = +prompt(
+                        `
+                        1 = Nhẹ (có thể xử lý nhanh)
+                        2 = Trung bình 
+                        3 = Nghiêm trọng (cần báo cáo lãnh đạo)
+                        `
+                        )
+                        if (SeverityLevel === 1 || SeverityLevel === 2 || SeverityLevel === 3) {
+                            break;
+                        }
+                        alert("Chỉ nhập 1 / 2 / 3");
+                    }
+                    break;
+                }
+                if (TypeOfFeedback === 1 || TypeOfFeedback === 2 || TypeOfFeedback === 3) {
+                    break;
+                }
+                alert("Chỉ nhập 1 / 2 / 3");
+
+            }
+
+            if (TypeOfFeedback === 1 && SeverityLevel === 3) {
+                seriousComplaint++;
+                alert("→ Chuyển ngay lãnh đạo - Khiếu nại nghiêm trọng");
+            } else if (TypeOfFeedback === 1 && SeverityLevel === 2) {
+                averageComplaints++
+                alert("→ Ghi nhận, sẽ xử lý trong ngày - Khiếu nại trung bình");
+            } else if (TypeOfFeedback === 1 && SeverityLevel === 1) {
+                minorComplaint++;
+                alert("→ Xử lý ngay tại quầy - Khiếu nại nhẹ");
+            } else if (TypeOfFeedback === 2) {
+                improve++;
+                alert("→ Cảm ơn! Đề xuất đã được ghi nhận");
+            } else if (TypeOfFeedback === 3) {
+                feepositiveFeedbackdback++;
+                alert("→ Cảm ơn bạn đã phản hồi tích cực!");
+            }
+            feedback++
+        }
+
+        alert(
+            `
+            Tổng số phản hồi/khiếu nại đã xử lý: ${feedback}
+            Số khiếu nại nghiêm trọng (mức 3): ${seriousComplaint}
+            Số khiếu nại trung bình (mức 2): ${averageComplaints}
+            Số khiếu nại nhẹ (mức 1): ${minorComplaint}
+            Số đề xuất cải thiện: ${improve}
+            Số phản hồi tích cực: ${feepositiveFeedbackdback}
+            `
+        )
+    </script>
+</body>
+
+</html>

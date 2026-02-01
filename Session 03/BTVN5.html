@@ -1,0 +1,73 @@
+<script>
+    let totalRequest = 0;
+    let requestSuccess = 0;
+    let requestRefuse = 0;
+    let requestWaiting = 0;
+
+    while (true) {
+        let request = prompt("Có yêu cầu đặt mượn trước mới không? (có/không)").trim().toLowerCase();
+        if (request === "không") {
+            break;
+        } else if (request !== "có") {
+            alert("Chỉ nhập có & không");
+            continue
+        }
+
+        let namePeople = prompt("Tên bạn đọc");
+        let bookId = prompt("Mã sách muốn đặt trước");
+        let bookName = prompt("Tên sách");
+        let waitingDays
+        while (true) {
+            waitingDays = +prompt("Số ngày dự kiến chờ ");
+            if (waitingDays >= 1) {
+                break;
+            }
+            alert("nhập số nguyên >= 1");
+        }
+
+        let prioritize
+
+        while (true) {
+            prioritize = +prompt(
+                `
+                1 = Sinh viên bình thường 
+                2 = Giảng viên/Nghiên cứu sinh 
+                3 = Nhân viên thư viện / Đặc cách
+                `
+            )
+            if (prioritize === 1 || prioritize === 2 || prioritize === 3) {
+                break;
+            }
+            alert("Chỉ nhập 1 / 2 / 3");
+        }
+
+        if (waitingDays > 45) {
+            requestRefuse++;
+            alert("Từ chối: Thời gian chờ quá lâu (>45 ngày)");
+        }else if (prioritize === 3) {
+            requestSuccess++;
+            alert("Đặt trước thành công - Ưu tiên đặc cách cao nhất");
+        }else if(prioritize === 2 && waitingDays <= 30){
+            requestSuccess++;
+            alert("Đặt trước thành công - Ưu tiên giảng viên/nghiên cứu");
+
+        }else if (prioritize === 1 && waitingDays <= 21) {
+            requestSuccess++;
+            alert("Đặt trước thành công");
+        }else{
+            requestWaiting++
+            alert("Đặt trước tạm thời - Chờ xét duyệt thêm");
+        }
+
+        totalRequest++
+    }
+
+    alert(
+        `
+        Tổng số yêu cầu đã xử lý: ${totalRequest}
+        Số yêu cầu được đặt trước thành công: ${requestSuccess}
+        Số yêu cầu bị từ chối: ${requestRefuse}
+        Số yêu cầu chờ xét duyệt: ${requestWaiting}
+        `
+    )
+</script>

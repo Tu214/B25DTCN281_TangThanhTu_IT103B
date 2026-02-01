@@ -1,0 +1,72 @@
+<script>
+    let lostBook = 0;
+    let outOfStock = 0;
+    let manyBooks = 0;
+    let NormalBooks = 0;
+    let totalBook = 0;
+    while (true) {
+        let request = prompt("Tiếp tục kiểm kê sách tiếp theo? (có/không)").trim().toLowerCase();
+        if (request === "không") {
+            break;
+        } else if (request !== "có") {
+            alert("Chỉ nhập có & không");
+            continue
+        }
+
+        let bookId
+        while (true) {
+            bookId = prompt("mã sách").trim().toLowerCase();
+            if (isNaN(bookId)) {
+                break
+            }
+            alert("lỗi nhập chuỗi");
+        }
+
+        let bookName = prompt("tên sách");
+
+        let quantity
+        while (true) {
+            quantity = +prompt("số lượng đang có trong kho");
+            if (quantity >= 0) {
+                break;
+            }
+            alert("Số nguyên >= 0");
+        }
+
+        let status
+
+        while (true) {
+            status = +prompt(
+                `
+                1 - Bình thường (Có thể cho mượn)
+                2 - Mất (không còn trong kho)
+                `
+            )
+            if (status === 1 || status === 2) {
+                break;
+            }
+            alert("Chỉ nhập 1 & 2");
+        }
+
+        if (status === 2) {
+            lostBook++
+        }else if (status === 1 && quantity === 0) {
+            outOfStock++
+        }else if (status === 1 && quantity >= 10) {
+            manyBooks++
+        }else{
+            NormalBooks++
+        }
+        totalBook++
+    }
+
+    alert(
+        `
+        ổng số sách đã kiểm kê: ${totalBook} cuốn
+        - Số sách mất: ${lostBook} cuốn
+        - Số sách hết hàng: ${outOfStock} cuốn
+        - Số sách tồn kho nhiều: ${manyBooks}
+        - Số Sách tồn kho bình thường ${NormalBooks}
+        `
+    )
+</script>

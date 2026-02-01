@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ Thống Quản Lý Thư Viện</title>
+</head>
+<body>
+    <script>
+        let password = "";
+        let count = 0;
+        let loginSuccess = false;
+
+        do {
+            password = prompt("Nhập mật khẩu (Lần " + (count + 1) + "/3):");
+            count++;
+            
+            if (password === "admin123") {
+                loginSuccess = true;
+                break; 
+            }
+
+            if (count >= 3) {
+                alert("Hệ thống bị khóa");
+                break; 
+            }
+            alert("Sai mật khẩu, vui lòng thử lại!");
+        } while (count < 3);
+
+        if (loginSuccess) {
+            alert("Đăng nhập thành công!");
+            let choice;
+
+            do {
+                choice = +prompt(
+                    "CHỌN CHỨC NĂNG:\n" +
+                    "1 - Nhập lô sách mới\n" +
+                    "2 - Vẽ sơ đồ kệ sách\n" +
+                    "3 - Thoát"
+                );
+
+                if (choice === 1) {
+                    let newBook = +prompt("Bạn muốn nhập bao nhiêu cuốn sách?");
+                    let totalPrice = 0;
+                    for (let i = 1; i <= newBook; i++) {
+                        let priceBook = +prompt("Nhập giá tiền của cuốn sách thứ " + i);
+                        
+                        if (priceBook <= 0 || isNaN(priceBook)) {
+                            alert("Giá không hợp lệ, không cộng vào tổng!");
+                            continue; 
+                        }
+                        totalPrice += priceBook;
+                    }
+                    alert("Tổng giá trị nhập kho đợt này là: " + totalPrice);
+                }
+
+                if (choice === 2) {
+                    let totalDiagram = "--- SƠ ĐỒ VỊ TRÍ KỆ SÁCH ---\n";
+                    for (let i = 1; i <= 3; i++) {
+                        for (let j = 1; j <= 5; j++) {
+                            if (i === 2 && j === 3) {
+                                totalDiagram += "Khu vực " + i + " - Kệ " + j + " (Đang sửa chữa)\n";
+                                continue; 
+                            }
+                            totalDiagram += "Khu vực " + i + " - Kệ " + j + "\n";
+                        }
+                    }
+                    alert(totalDiagram);
+                }
+
+                if (choice === 3) {
+                    alert("Hẹn gặp lại!");
+                }
+
+            } while (choice !== 3);
+        }
+    </script>
+</body>
+</html>

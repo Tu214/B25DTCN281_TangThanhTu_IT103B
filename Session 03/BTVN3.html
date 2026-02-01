@@ -1,0 +1,48 @@
+<script>
+    let extraCountTrue = 0;
+    let extraCountfalse = 0;
+
+    while (true) {
+        let request = prompt("Có yêu cầu gia hạn mới không? (có/không)").trim().toLowerCase();
+        if (request === "không") {
+            break;
+        } else if (request !== "có") {
+            alert("Chỉ nhập có & không");
+            continue
+        }
+
+        let name = prompt("Tên bạn đọc");
+        let bookName = prompt("tên sách");
+        let currentDays, extraDays;
+
+        while (true) {
+            currentDays = +prompt("Số ngày đã mượn hiện tại (số nguyên ≥ 1)");
+            extraDays = +prompt("Số ngày muốn gia hạn thêm (số nguyên ≥ 1)");
+
+            if (!isNaN(currentDays) && !isNaN(extraDays) >= 1) {
+                break
+            }
+            alert("lỗi phải là số nguyên dương >= 1");
+        }
+
+        let total = currentDays + extraDays;
+
+        if (total > 60) {
+            alert("Không được gia hạn: Tổng thời gian vượt quá 60 ngày tối đa");
+            extraCountfalse++;
+        } else if (total > 45) {
+            alert("Không được gia hạn: Đã mượn quá lâu (>45 ngày)");
+            extraCountfalse++;
+        } else {
+            alert("Gia hạn thành công");
+            extraCountTrue++
+        }
+    }
+
+    alert(
+        `
+        Số lần gia hạn thành công: ${extraCountTrue}
+        Số lần gia hạn không thành công ${extraCountfalse}
+        `
+    )
+</script>
