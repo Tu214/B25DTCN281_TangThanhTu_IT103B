@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let check = 0;
+        while (check < 3) {
+            let account = prompt("Mời bạn nhập tài khoản:");
+            let password = prompt("Mời bạn nhập mật khẩu:");
+
+            if (account === "admin" && password === "12345") {
+                break;
+            } else {
+                check++
+                let remaining = 3 - check;
+                if (account !== "admin" && password !== "12345") {
+                    alert(`Sai tài khoản và mật khẩu, số lần thử còn lại ${remaining}`);
+                } else if (account !== "admin") {
+                    alert(`Sai tài khoản, số lần thử còn lại ${remaining}`);
+                } else {
+                    alert(`Sai mật khẩu, số lần thử còn lại ${remaining}`);
+                }
+            }
+        }
+
+        if (check >= 3) {
+            alert("Nhập quá số lần cho phép, tài khoản bị khoá");
+        } else {
+            let choice
+            do {
+                choice = +prompt(
+                    `
+                --- HỆ THỐNG QUẢN LÝ THƯ VIỆN ---
+                1. Phân loại mã số sách (Số nguyên chẵn/lẻ).
+                2. Thiết kế bản đồ kho sách (Dạng lưới).
+                3. Dự toán phí bảo trì sách theo năm.
+                4. Tìm mã số sách may mắn (Số nguyên tố/Số đặc biệt).
+                5. Thoát.
+                `
+                );
+                switch (choice) {
+                    case 1:
+                        BookIdClassification();
+                        break;
+                    case 2:
+                        layoutDesign();
+                        break;
+                    case 3:
+                        maintenanceFees();
+                        break;
+                    case 4:
+                        lottery();
+                        break;
+                    case 5:
+                        alert("Hệ thống đang đăng xuất...");
+                        break;
+                    default:
+                        alert("Lựa chọn không hợp lệ");
+                }
+            } while (choice !== 5);
+        }
+
+        function BookIdClassification() {
+            let bookId
+            let totalCheck = 0
+            let bookIdOdd = 0;
+            let bookIdEven = 0;
+            while (true) {
+                bookId = +prompt("Nhập mã sách, nhập 0 để dừng lại");
+                if (bookId === 0) {
+                    break;
+                    alert("Thoát");
+                } else {
+                    if (bookId % 2 === 0) {
+                        bookIdEven++;
+                    } else {
+                        bookIdOdd++;
+                    }
+                }
+                totalCheck++;
+            }
+            console.log(
+                `
+                - Tổng số lượng sách đã nhập: ${totalCheck}
+                - mã số là số chẵn (Sách khoa học): ${bookIdEven}
+                - mã số là số lẻ (Sách nghệ thuật): ${bookIdOdd}
+                `
+            );
+        }
+
+        function layoutDesign() {
+            let cols = +prompt("Số cột");
+            let rows = +prompt("Số hàng");
+
+            if (isNaN(cols) || isNaN(rows) || cols <= 0 || rows <= 0) {
+                alert("Số hàng và số cột phải là số nguyên dương");
+                return;
+            }
+
+            for (let i = 0; i < rows; i++) {
+                let numberOfRows = "";
+                for (let j = 0; j < cols; j++) {
+                    let location = `[${i} - ${j}]`
+                    if (i === j) {
+                        location += "(Kệ ưu tiên)"
+                    }
+                    numberOfRows += location + "  ";
+                }
+                console.log(numberOfRows);
+            }
+        }
+
+        function maintenanceFees() {
+            let quantityBook = +prompt("Số lượng sách hiện có");
+            let fees = +prompt("Phí bảo trì");
+            let years = +prompt("Năm dự toán");
+
+            if (isNaN(quantityBook) || isNaN(fees) || isNaN(fees)) {
+                alert("dữ liệu nhập vào phải là số");
+                return;
+            }
+            let totalFees = 0;
+            for (let i = 1; i <= years; i++) {
+                totalFees += quantityBook * fees
+                console.log(`Năm ${i}:  ${totalFees} VNĐ (${fees} VNĐ / cuốn)`);
+                fees *= 1.1
+            }
+        }
+
+        function lottery() {
+            let n = +prompt("kiểm tra mã sách từ 1 đến:");
+            if (isNaN(n) || n <= 0) {
+                alert("Vui lòng nhập số nguyên dương dương!");
+                return;
+            }
+
+            let count = 0;
+            let list = "";
+            
+            for (let i = 1; i <= n; i++) {
+                if (i % 3 === 0 && i % 5 !== 0) {
+                    list += i + " ";
+                    count++;
+                }
+            }
+            console.log(list);
+            console.log(`=> Tổng cộng có ${count} mã may mắn.`);
+        }
+    </script>
+</body>
+
+</html>
