@@ -1,0 +1,84 @@
+<script>
+    let booksId = [];
+    let booksName = [];
+    let booksCategory = [];
+    let inventoryQuantity = [];
+
+    let soLuong = +prompt("Có bao nhiêu loại sách cần nhập thông tin hôm nay?");
+
+    if (soLuong > 0) {
+        for (let i = 1; i <= soLuong; i++) {
+            console.log(`\n--- Nhập thông tin sách thứ ${i} ---`);
+
+            let id;
+            while (true) {
+                id = prompt(`Nhập mã sách thứ ${i}:`).trim();
+
+                if (id === "") {
+                    alert("Mã sách không được để trống!");
+                } else if (booksId.includes(id)) {
+                    alert(`Mã sách '${id}' đã tồn tại! Vui lòng nhập mã khác.`);
+                } else {
+                    break; 
+                }
+            }
+
+            let name;
+            while (true) {
+                name = prompt(`Nhập tên sách thứ ${i}:`).trim();
+                if (name !== "") break;
+                alert("Tên sách không được để trống!");
+            }
+
+            let category = prompt(`Nhập các thể loại của sách thứ ${i} (cách nhau bởi dấu phẩy):`);
+
+            let qty;
+            while (true) {
+                qty = +prompt(`Nhập số lượng tồn kho của sách thứ ${i}:`);
+                if (!isNaN(qty) && qty >= 0) break;
+                alert("Số lượng phải là số nguyên lớn hơn hoặc bằng 0!");
+            }
+
+            booksId.push(id);
+            booksName.push(name);
+            booksCategory.push(category);
+            inventoryQuantity.push(qty);
+        }
+
+        let countProgramming = 0;
+        for (let cat of booksCategory) {
+            if (cat.toLowerCase().includes("lập trình")) {
+                countProgramming++;
+            }
+        }
+        console.log(`Tổng số sách thuộc thể loại 'Lập trình': ${countProgramming}`);
+
+        console.log("Danh sách mã sách thuộc cả hai thể loại 'JavaScript' và 'Web':");
+        let foundJSWeb = false;
+
+        for (let i = 0; i < booksCategory.length; i++) {
+            let currentCat = booksCategory[i];
+            if (currentCat.includes("JavaScript") && currentCat.includes("Web")) {
+                console.log(booksId[i]);
+                foundJSWeb = true;
+            }
+        }
+        if (!foundJSWeb) console.log("(Không có sách nào thỏa mãn)");
+
+        let minQty = inventoryQuantity[0];
+        let minIndex = 0;
+
+        for (let i = 1; i < inventoryQuantity.length; i++) {
+            if (inventoryQuantity[i] < minQty) {
+                minQty = inventoryQuantity[i];
+                minIndex = i;
+            }
+        }
+
+        console.log("Loại sách có số lượng tồn kho thấp nhất:");
+        console.log(`Mã sách: ${booksId[minIndex]}, Tên sách: ${booksName[minIndex]}, Tồn kho: ${minQty}`);
+
+    } else {
+        console.log("Không có dữ liệu đầu vào.");
+    }
+</script>

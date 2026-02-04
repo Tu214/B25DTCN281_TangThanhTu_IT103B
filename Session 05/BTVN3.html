@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let booksId = [];
+        let booksName = [];
+        let booksinventoryQuantityId = [];
+        let countBook;
+        while (true) {
+            countBook = +prompt( "Có bao nhiêu loại sách cần kiểm tra bổ sung hôm nay? ")
+            if (countBook > 0) {
+                break;
+            }
+            alert("dữ liệu nhập vào phải là số nguyên dương");
+        }
+
+        let bookId;
+        let nameBook;
+        let inventory;
+        for (let i = 0; i < countBook; i++) {
+            alert(`--- Nhập thông tin loại sách thứ ${i + 1} ---`);
+            while (true) {
+                bookId = prompt("Nhập mã sách (không được để trống)");
+                if (bookId.length !== 0) {
+                    break;
+                }
+                alert("Lỗi không được để trống");
+            }
+
+            while (true) {
+                nameBook = prompt("Nhập tên sách (không được để trống)");
+                if (nameBook.length !== 0) {
+                    break;
+                }
+                alert("Lỗi không được để trống");
+            }
+
+            while (true) {
+                inventory = +prompt("Nhập số lượng tồn kho (không được để trống)");
+                if (inventory >= 0) {
+                    break;
+                }
+                alert("số nguyên ≥ 0");
+            }
+
+            booksId.push(bookId)
+            booksName.push(nameBook)
+            booksinventoryQuantityId.push(inventory)
+        }
+
+        console.log(`Danh sách cần xem xét bổ xung (${countBook} loại):`);
+        let inventoryQuantity = 0;
+        let bookIdOutOfStock = []
+        for (let j = 0; j < countBook; j++) {
+            console.log(`${j+1}. Mã: ${booksId[j]} - Tên: ${booksName[j]} - Còn: ${booksinventoryQuantityId[j]}`);
+            
+            if (booksinventoryQuantityId[j] <= 5) {
+                inventoryQuantity++;
+            }
+
+            if (booksinventoryQuantityId[j] === 0) {
+                bookIdOutOfStock.push(booksId[j]);
+            }
+        }
+        console.log(`Số lượng tồn kho <= 5 bản: ${inventoryQuantity} loại`);
+        if (bookIdOutOfStock.length > 0) {
+            console.log(`Các mã sách đã hết hàng (${bookIdOutOfStock.length} bản): ${bookIdOutOfStock.join(", ")}`);
+            
+        } else {
+            console.log("Không có mã sách hết hàng");
+            
+        }
+    </script>
+</body>
+</html>

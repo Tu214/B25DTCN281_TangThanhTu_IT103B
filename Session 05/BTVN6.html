@@ -1,0 +1,102 @@
+<script>
+
+    let readerCardIds = [];
+    let readerNames = [];
+    let borrowedBookCodes = [];
+    let overdueDays = [];
+
+    let totalOverdue = +prompt("Hôm nay có bao nhiêu bạn đọc bị ghi nhận quá hạn?");
+
+    if (totalOverdue > 0) {
+        for (let i = 1; i <= totalOverdue; i++) {
+            console.log(`\n--- Nhập thông tin bạn đọc thứ ${i} ---`);
+
+            let id;
+            while (true) {
+                id = prompt(`Nhập mã thẻ thứ ${i}:`).trim();
+                if (id === "") {
+                    alert("Mã thẻ không được để trống!");
+                } else if (readerCardIds.includes(id)) {
+                    alert(`Mã thẻ '${id}' đã tồn tại! Vui lòng nhập mã khác.`);
+                } else {
+                    break;
+                }
+            }
+
+            let name;
+            while (true) {
+                name = prompt(`Nhập tên bạn đọc thứ ${i}:`).trim();
+                if (name !== "") break;
+                alert("Tên bạn đọc không được để trống!");
+            }
+
+            let bookCodes = prompt(`Nhập các mã sách đang mượn (cách nhau bởi dấu phẩy):`);
+
+            let days;
+            while (true) {
+                days = +prompt(`Nhập số ngày quá hạn của bạn ${name}:`);
+                if (!isNaN(days) && days >= 0) break;
+                alert("Số ngày phải là số nguyên lớn hơn hoặc bằng 0!");
+            }
+
+            readerCardIds.push(id);
+            readerNames.push(name);
+            borrowedBookCodes.push(bookCodes);
+            overdueDays.push(days);
+        }
+
+        let countSevere = 0;
+        let countWarning7Days = 0;
+
+        for (let days of overdueDays) {
+            if (days >= 10) countSevere++;
+            if (days >= 7) countWarning7Days++;
+        }
+        console.log(`a. Tổng số bạn đọc quá hạn >= 10 ngày: ${countSevere}`);
+
+        console.log("b. Danh sách mã thẻ mượn cả sách 'JS' và 'PYT':");
+        let foundCrossBorrower = false;
+
+        for (let i = 0; i < borrowedBookCodes.length; i++) {
+            let currentBooks = borrowedBookCodes[i].split(",");
+
+            let hasJS = false;
+            let hasPYT = false;
+
+            for (let code of currentBooks) {
+                code = code.trim();
+                if (code.indexOf("JS") === 0) hasJS = true;
+                if (code.indexOf("PYT") === 0) hasPYT = true;
+            }
+
+            if (hasJS && hasPYT) {
+                console.log(`   - Mã thẻ: ${readerCardIds[i]} (Tên: ${readerNames[i]})`);
+                foundCrossBorrower = true;
+            }
+        }
+        if (!foundCrossBorrower) console.log("   (Không tìm thấy bạn đọc nào)");
+
+        let maxDays = overdueDays[0];
+        let maxIndex = 0;
+
+        for (let i = 1; i < overdueDays.length; i++) {
+            if (overdueDays[i] > maxDays) {
+                maxDays = overdueDays[i];
+                maxIndex = i;
+            }
+        }
+        console.log(`c. Bạn đọc quá hạn lâu nhất: ${readerNames[maxIndex]} (${maxDays} ngày)`);
+
+        console.log("d. Đánh giá tình hình:");
+        if (countWarning7Days === 0) {
+            console.log("   => Tình hình trả sách hôm nay khá tốt!");
+        } else if (countWarning7Days >= 1 && countWarning7Days <= 4) {
+            console.log("   => Cần gửi nhắc nhở cho một số bạn đọc!");
+        } else {
+            console.log("   => Tình trạng quá hạn nghiêm trọng! Cần liên hệ ngay!");
+        }
+
+    } else {
+        console.log("Không có dữ liệu đầu vào.");
+    }
+</script>
