@@ -1,13 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <script>
-        
+        let books = ["Nha Gia Kim", "Dac Nhan Tam", "Tuan Lam Viec 4 Gio"];
+        let choice;
+
+        do {
+            let menu = `--- THƯ VIỆN KHOA HỌC ---
+                1. Xem danh sách
+                2. Nhập sách mới
+                3. Mượn sách (Xóa)
+                4. Sửa tên sách
+                5. Sắp xếp kệ
+                0. Thoát
+                Vui lòng chọn:`;
+
+            choice = Number(prompt(menu));
+
+            switch (choice) {
+                case 1:
+                    console.log(`=> Danh sách hiện tại (${books.length} cuốn):`);
+                    if (books.length === 0) {
+                        console.log("Kệ sách hiện đang trống.");
+                    } else {
+                        for (let i = 0; i < books.length; i++) {
+                            console.log(`${i + 1}. ${books[i]}`);
+                        }
+                    }
+                    break;
+
+                case 2:
+                    let newBook = prompt("Nhập tên cuốn sách mới:");
+                    if (newBook && newBook.trim() !== "") {
+                        books.push(newBook.trim());
+                        alert("Đã thêm thành công!");
+                    } else {
+                        alert("Lỗi: Tên sách không được để trống!");
+                    }
+                    break;
+
+                case 3:
+                    let bookToBorrow = prompt("Nhập tên sách muốn mượn:");
+                    let borrowIndex = books.indexOf(bookToBorrow);
+
+                    if (borrowIndex !== -1) {
+                        books.splice(borrowIndex, 1);
+                        alert(`=> Đã cho mượn cuốn '${bookToBorrow}'.`);
+                    } else {
+                        alert(`=> Lỗi: Không tìm thấy sách ${bookToBorrow} trong kho!`);
+                    }
+                    break;
+
+                case 4:
+                    let oldName = prompt("Nhập tên sách cũ cần sửa:");
+                    let editIndex = books.indexOf(oldName);
+
+                    if (editIndex !== -1) {
+                        let newName = prompt(`Tìm thấy sách. Nhập tên mới cho '${oldName}':`);
+                        if (newName && newName.trim() !== "") {
+                            books[editIndex] = newName.trim();
+                            alert("Cập nhật thành công!");
+                        }
+                    } else {
+                        alert("=> Lỗi: Sách không tồn tại!");
+                    }
+                    break;
+
+                case 5:
+                    books.sort();
+                    alert("Đã sắp xếp lại kệ sách theo thứ tự A-Z.");
+                    console.log("--- Danh sách sau khi sắp xếp ---");
+                    for (let i = 0; i < books.length; i++) {
+                        console.log(`${i + 1}. ${books[i]}`);
+                    }
+                    break;
+
+                case 0:
+                    alert("Cảm ơn thủ thư Tú. Hẹn gặp lại!");
+                    break;
+
+                default:
+                    alert("Lựa chọn không hợp lệ!");
+            }
+
+        } while (choice !== 0);
     </script>
 </body>
+
 </html>
