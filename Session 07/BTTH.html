@@ -1,0 +1,89 @@
+<script>
+    let players = [];
+    let goals = [];
+
+    function addPlayer(name, goal) {
+        players.push(name);
+        goals.push(goal);
+        console.log(`=> Đã thêm cầu thủ ${name} thành công.`);
+    }
+
+    function showSquad() {
+        console.log("--- DANH SÁCH ĐỘI HÌNH ---");
+        if (players.length === 0) {
+            console.log("Hiện tại chưa có cầu thủ nào.");
+        } else {
+            for (let i = 0; i < players.length; i++) {
+                console.log(`${i + 1}. ${players[i]} - ${goals[i]} bàn`);
+            }
+        }
+    }
+
+    const getTotalGoals = function () {
+        let total = 0;
+        for (let goal of goals) {
+            total += goal;
+        }
+        return total;
+    };
+
+    function findMostGoals(goalsArray) {
+        if (goalsArray.length === 0) return 0;
+        let max = goalsArray[0];
+        for (let i = 1; i < goalsArray.length; i++) {
+            if (goalsArray[i] > max) {
+                max = goalsArray[i];
+            }
+        }
+        return max;
+    }
+
+    function main() {
+        let choice;
+        do {
+            let menu = `MENU QUẢN LÝ ĐỘI BÓNG:
+            1. Nhập cầu thủ
+            2. Xem danh sách
+            3. Tổng bàn thắng
+            4. Xem Vua phá lưới
+            0. Thoát`;
+
+            choice = Number(prompt(menu));
+
+            switch (choice) {
+                case 1:
+                    let nameInput = prompt("Nhập tên cầu thủ:");
+                    let goalInput = Number(prompt("Nhập số bàn thắng:"));
+                    if (nameInput && !isNaN(goalInput)) {
+                        addPlayer(nameInput, goalInput);
+                    }
+                    break;
+                case 2:
+                    showSquad();
+                    break;
+                case 3:
+                    let total = getTotalGoals();
+                    console.log(`=> Tổng số bàn thắng của cả đội là: ${total} bàn.`);
+                    break;
+                case 4:
+                    let topGoal = findMostGoals(goals);
+                    if (topGoal === 0 && players.length === 0) {
+                        console.log("=> Chưa có dữ liệu.");
+                    } else {
+                        let topIndex = goals.indexOf(topGoal);
+                        let topName = players[topIndex];
+                        console.log(`=> Vua phá lưới hiện tại ghi được: ${topGoal} bàn.`);
+                        console.log(`=> Đó là cầu thủ: ${topName}`);
+                    }
+                    break;
+                case 0:
+                    console.log("Thoát chương trình.");
+                    break;
+                default:
+                    console.log("Lựa chọn không hợp lệ.");
+            }
+        } while (choice !== 0);
+    }
+
+    main();
+</script>

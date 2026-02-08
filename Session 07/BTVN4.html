@@ -1,0 +1,54 @@
+<script>
+    let players = [
+        "P001-Nguyễn Văn A-Thủ môn",
+        "P002-Trần Thị B-Hậu vệ",
+        "P003-Lê Văn C-Hậu vệ",
+        "P004-Phạm Văn D-Tiền vệ",
+        "P005-Hoàng Thị E-Tiền đạo",
+        "P006-Vũ Minh F-Tiền đạo",
+        "P007-Đặng Văn G-Thủ môn"
+    ];
+
+    function printTeamRoster() {
+        console.log("--- DANH SÁCH ĐỘI HÌNH ---");
+        for (let i = 0; i < players.length; i++) {
+            let details = players[i].split("-");
+            console.log(`${i + 1}. ${details[0]} | ${details[1]} | ${details[2]}`);
+        }
+    }
+
+    function countPlayerByPosition(playersList) {
+        let counts = {
+            "Thủ môn": 0,
+            "Hậu vệ": 0,
+            "Tiền vệ": 0,
+            "Tiền đạo": 0
+        };
+
+        for (let player of playersList) {
+            let pos = player.split("-")[2];
+            if (counts.hasOwnProperty(pos)) {
+                counts[pos]++;
+            }
+        }
+        return counts;
+    }
+
+    function hasGoalkeeper() {
+        for (let player of players) {
+            if (player.includes("Thủ môn")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    printTeamRoster();
+
+    let positionStats = countPlayerByPosition(players);
+    console.log("\n--- THỐNG KÊ VỊ TRÍ ---");
+    console.log(`“Thủ môn” : ${positionStats["Thủ môn"]}, “Hậu vệ” : ${positionStats["Hậu vệ"]}, “Tiền vệ” : ${positionStats["Tiền vệ"]}, “Tiền đạo” : ${positionStats["Tiền đạo"]}`);
+
+    let goalkeeperExists = hasGoalkeeper();
+    console.log(`\nĐội có ít nhất 1 thủ môn: ${goalkeeperExists}`);
+</script>

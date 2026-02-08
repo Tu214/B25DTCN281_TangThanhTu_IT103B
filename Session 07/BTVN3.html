@@ -1,0 +1,65 @@
+<script>
+    let players = [];
+
+    function pushPlayer(id, name, position) {
+        let playerString = `${id}-${name}-${position}`;
+        players.push(playerString);
+    }
+
+    function printTeamRoster() {
+        console.log(`\n--- DANH SÁCH ĐỘI HÌNH (${players.length} CẦU THỦ) ---`);
+        for (let i = 0; i < players.length; i++) {
+            let details = players[i].split("-");
+            console.log(`${i + 1}. Mã: ${details[0]} | Tên: ${details[1]} | Vị trí: ${details[2]}`);
+        }
+    }
+
+    let count = +prompt("Có bao nhiêu cầu thủ cần nhập vào đội bóng?");
+
+    if (count > 0) {
+        for (let i = 1; i <= count; i++) {
+            let id;
+            while (true) {
+                id = prompt(`Nhập mã cầu thủ thứ ${i}:`).trim();
+                let isDuplicate = false;
+                for (let p of players) {
+                    if (p.split("-")[0] === id) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                if (id === "") {
+                    alert("Mã cầu thủ không được để trống!");
+                } else if (isDuplicate) {
+                    alert(`Mã cầu thủ '${id}' đã tồn tại!`);
+                } else {
+                    break;
+                }
+            }
+
+            let name;
+            while (true) {
+                name = prompt(`Nhập tên cầu thủ thứ ${i}:`).trim();
+                if (name !== "") break;
+                alert("Tên cầu thủ không được để trống!");
+            }
+
+            let posChoice;
+            let posName = "";
+            while (true) {
+                posChoice = +prompt(`Vị trí (1: Thủ môn, 2: Hậu vệ, 3: Tiền vệ, 4: Tiền đạo):`);
+                if (posChoice === 1) { posName = "Thủ môn"; break; }
+                if (posChoice === 2) { posName = "Hậu vệ"; break; }
+                if (posChoice === 3) { posName = "Tiền vệ"; break; }
+                if (posChoice === 4) { posName = "Tiền đạo"; break; }
+                alert("Vui lòng chọn từ 1 đến 4!");
+            }
+
+            pushPlayer(id, name, posName);
+        }
+
+        printTeamRoster();
+    } else {
+        console.log("Số lượng cầu thủ không hợp lệ.");
+    }
+</script>

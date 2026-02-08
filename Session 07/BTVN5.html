@@ -1,0 +1,58 @@
+<script>
+    let players = [
+        "P001-Nguyễn Văn A-Thủ môn",
+        "P002-Trần Thị B-Hậu vệ",
+        "P003-Lê Văn C-Hậu vệ",
+        "P004-Phạm Văn D-Tiền vệ",
+        "P005-Hoàng Thị E-Tiền đạo",
+        "P006-Vũ Minh F-Tiền đạo",
+        "P007-Đặng Văn G-Thủ môn"
+    ];
+
+    function getAllPositions() {
+        let uniquePositions = [];
+        for (let player of players) {
+            let position = player.split("-")[2];
+            if (!uniquePositions.includes(position)) {
+                uniquePositions.push(position);
+            }
+        }
+        return uniquePositions;
+    }
+
+    function findPlayersWithLongestName() {
+        let longestName = "";
+        for (let player of players) {
+            let name = player.split("-")[1];
+            if (name.length > longestName.length) {
+                longestName = name;
+            }
+        }
+        return longestName;
+    }
+
+    function countPlayersStartingWithLetter(letter) {
+        let count = 0;
+        let searchLetter = letter.toLowerCase();
+
+        for (let player of players) {
+            let name = player.split("-")[1];
+            if (name[0].toLowerCase() === searchLetter) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    console.log("--- KẾT QUẢ XỬ LÝ DỮ LIỆU ĐỘI BÓNG ---");
+
+    let positions = getAllPositions();
+    console.log("a. Các vị trí có trong đội:", positions);
+
+    let longest = findPlayersWithLongestName();
+    console.log(`b. Cầu thủ có tên dài nhất là: ${longest}`);
+
+    let letterToSearch = "N";
+    let count = countPlayersStartingWithLetter(letterToSearch);
+    console.log(`c. Số lượng cầu thủ có tên bắt đầu bằng chữ '${letterToSearch}': ${count}`);
+</script>
