@@ -1,0 +1,22 @@
+<script>
+    const players = [
+        "Messi - Forward",
+        "Ronaldo - Forward",
+        "Neymar - Forward",
+        "De Bruyne - Midfielder",
+        "Kante - Midfielder",
+        "Van Dijk - Defender",
+        "Alisson - Goalkeeper"
+    ]
+
+    function getReversedNames (players) {
+        let result = players.map(function (players) {
+            return players.split(" - ")[0]
+        })
+        return result.reverse();
+    }
+
+    let arrReverse = getReversedNames(players)
+    console.log(arrReverse);
+    
+</script>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Khởi tạo dữ liệu mẫu với 3 mảng song song
+        let names = ["Iphone 15", "Macbook M3", "Airpods Pro", "Chuột Logitech", "Bàn phím cơ"];
+        let prices = [1200, 2500, 250, 80, 150];
+        let stocks = [10, 5, 0, 20, 15];
+
+        function main() {
+            let choice;
+            do {
+                let menu = `--- QUẢN LÝ KHO HÀNG ---
+                    1. Lọc sản phẩm cao cấp (>500)
+                    2. Kiểm định trạng thái dữ liệu (Some/Every)
+                    3. Phân tích giá trị vốn hóa (Reduce)
+                    4. Chiến dịch chiết khấu 10% (Map)
+                    5. Truy vấn sản phẩm theo từ khóa (Filter)
+                    6. Báo cáo tình trạng tồn kho
+                    0. Thoát chương trình
+                    Nhập lựa chọn của bạn:`;
+
+                choice = Number(prompt(menu));
+
+                switch (choice) {
+                    case 1:
+                        // Lọc sản phẩm có giá > 500
+                        let premium = names.filter((name, index) => prices[index] > 500);
+                        alert("Sản phẩm cao cấp: " + (premium.length > 0 ? premium.join(", ") : "Không có"));
+                        break;
+
+                    case 2:
+                        // Yêu cầu 1: Kiểm tra hết hàng (số lượng = 0)
+                        let outOfStock = stocks.some(s => s === 0);
+                        // Yêu cầu 2: Kiểm tra giá sàn (> 100)
+                        let allAbove100 = prices.every(p => p > 100);
+
+                        alert(`- Có sản phẩm hết hàng: ${outOfStock ? "CÓ" : "KHÔNG"}
+                        - Tất cả sản phẩm > 100: ${allAbove100 ? "ĐÚNG" : "SAI"}`);
+                        break;
+
+                    case 3:
+                        // Tính tổng vốn hóa: sum(Price * Stock)
+                        let totalValue = names.reduce((total, _, index) => {
+                            return total + (prices[index] * stocks[index]);
+                        }, 0);
+                        alert(`Tổng giá trị tài sản trong kho: ${totalValue}`);
+                        break;
+
+                    case 4:
+                        // Chiết khấu 10% và cập nhật trực tiếp vào mảng gốc
+                        prices = prices.map(p => p * 0.9);
+                        alert("Đã áp dụng giảm giá 10% cho toàn bộ sản phẩm!");
+                        break;
+
+                    case 5:
+                        // Tìm kiếm theo từ khóa không phân biệt hoa thường
+                        let keyword = prompt("Nhập từ khóa tìm kiếm:").toLowerCase();
+                        let searchResult = names
+                            .map((name, index) => `${name} - ${prices[index]} - ${stocks[index]}`)
+                            .filter(info => info.toLowerCase().includes(keyword));
+
+                        alert(searchResult.length > 0 ? searchResult.join("\n") : "Không tìm thấy sản phẩm nào!");
+                        break;
+
+                    case 6:
+                        // Báo cáo tình trạng
+                        let report = names.map((name, index) => {
+                            let status = stocks[index] > 0 ? "Còn hàng" : "Hết hàng";
+                            return `${name}: ${status}`;
+                        });
+                        alert("BÁO CÁO KHO:\n" + report.join("\n"));
+                        break;
+
+                    case 0:
+                        alert("Hẹn gặp lại!");
+                        break;
+
+                    default:
+                        alert("Lựa chọn không hợp lệ!");
+                }
+            } while (choice !== 0);
+        }
+        main();
+    </script>
+</body>
+
+</html>
