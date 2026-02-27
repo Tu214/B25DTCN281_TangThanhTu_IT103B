@@ -1,0 +1,16 @@
+<script>
+    const player = {
+        name: "De Bruyne",
+        position: "Midfielder",
+        goals: 8,
+        assists: 25,
+        matchesPlayed: 35,
+    }
+    function addPerformanceScore (object) {
+        let performance = Number((object.goals + object.assists) / object.matchesPlayed).toFixed(2);
+        object.performancePerMatch = performance;
+        object.isKeyPlayer = performance >= 1 ? true : false;
+        console.log(player);
+    }
+    addPerformanceScore(player)
+</script>

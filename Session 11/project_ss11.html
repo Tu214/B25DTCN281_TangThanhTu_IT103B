@@ -1,0 +1,116 @@
+<script>
+
+    let students = [
+        { id: 1, name: "Nguyen Van C", age: 20, gpa: 8.5, status: "active" },
+        { id: 2, name: "Nguyen Van A", age: 17, gpa: 7.2, status: "inactive" },
+        { id: 3, name: "Le Thi B", age: 19, gpa: 9.0, status: "active" }
+    ];
+
+    const main = () => {
+        let loop = true;
+        while (loop) {
+            let choice = prompt(`
+        --- QUẢN LÝ SINH VIÊN ---
+        1. Thêm sinh viên (Create)
+        2. Hiển thị danh sách (Read)
+        3. Lọc sinh viên học bổng (GPA > 8.0)
+        4. Cập nhật sinh viên (Update)
+        5. Xóa sinh viên (Delete)
+        6. Kiểm tra điều kiện (Compliance)
+        7. Thống kê GPA trung bình
+        8. Chuẩn hóa tên (In hoa)
+        0. Thoát
+        Nhập lựa chọn của bạn:`);
+        
+            switch (choice) {
+                case "1": // Create
+                    const id = Date.now();
+                    const name = prompt("Nhập tên sinh viên:");
+                    const age = Number(prompt("Nhập tuổi:"));
+                    const gpa = Number(prompt("Nhập GPA:"));
+                    const status = prompt("Trạng thái (active/inactive):");
+                    students.push({ id, name, age, gpa, status });
+                    alert("Thêm thành công!");f
+                    break;
+
+                case "2": // Read
+                    console.clear();
+                    console.log("--- DANH SÁCH SINH VIÊN ---");
+                    console.table(students);
+                    alert("Đã xuất danh sách ra Console (F12)!");
+                    break;
+
+                case "3": // Filter
+                    const scholars = students.filter(s => s.gpa > 8.0);
+                    if (scholars.length > 0) {
+                        console.log(scholars);
+                    } else {
+                        console.log("Khong co sinh vien co gpa > 8.0")
+                    }
+                    alert(`Tìm thấy ${scholars.length} sinh viên.`);
+                    break;
+
+                case "4": // Update
+                    const idUpdate = Number(prompt("Nhập ID cần sửa:"));
+                    const student = students.find(s => s.id === idUpdate);
+                    if (student) {
+                        student.name = prompt("Nhập tên mới:", student.name);
+                        student.gpa = Number(prompt("Nhập GPA mới:", student.gpa));
+                        alert("Cập nhật thành công!");
+                    } else {
+                        alert("Không tìm thấy sinh viên!");
+                    }
+                    break;
+
+                case "5": // Delete
+                    const idDel = Number(prompt("Nhập ID cần xóa:"));
+                    const initialLength = students.length;
+                    students = students.filter(s => s.id !== idDel);
+                    students.length < initialLength ? alert("Đã xóa!") : alert("Thất bại!");
+                    break;
+
+                case "6": // Compliance
+                    const hasUnder18 = students.some(s => s.age < 18);
+                    const isAllActive = students.every(s => s.status === "active");
+                    alert(`Có SV dưới 18: ${hasUnder18}\nTất cả Active: ${isAllActive}`);
+                    break;
+
+                case "7": // Statistics (Reduce)
+                    const totalGpa = students.reduce((sum, s) => sum + s.gpa, 0);
+                    const avgGpa = students.length > 0 ? (totalGpa / students.length).toFixed(2) : 0;
+                    alert(`GPA trung bình toàn khóa: ${avgGpa}`);
+                    break;
+
+                case "8": // Normalization
+                    // let upperName = students.map(newStudent => ({
+                    //     ...newStudent,name:newStudent.name.toUpperCase()
+                    // }))
+                    let upperName = []
+                    for (const element of students) {
+                        let newArr = {
+                            id:element.id,
+                            name:element.name.toUpperCase(),
+                            age:element.age,
+                            gpa:element.gpa,
+                            status:element.status
+                        }
+                        upperName.push(newArr)
+                    }
+                    console.table(upperName);
+                    console.log(students);
+                    
+                    break;
+
+                case "0":
+                    loop = false;
+                    alert("Cảm ơn bạn đã sử dụng hệ thống!");
+                    break;
+
+                default:
+                    alert("Lựa chọn không hợp lệ!");
+            }
+        }
+    };
+
+    main();
+</script>
