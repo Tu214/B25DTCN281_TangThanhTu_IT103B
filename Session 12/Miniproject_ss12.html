@@ -1,0 +1,154 @@
+<script>
+    // 1. DỮ LIỆU GỐC (SEED DATA)
+    const seedStudent = [
+        { id: "S01", name: "Nguyen Van A", age: 19, gpa: 8.9, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S02", name: "Tran Thi B", age: 18, gpa: 7.5, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S03", name: "Le Van C", age: 21, gpa: 6.2, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S04", name: "Pham Thi D", age: 20, gpa: 0, status: "inactive", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: new Date().toLocaleString() },
+        { id: "S05", name: "Hoang Van E", age: 22, gpa: 2.8, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S06", name: "Do Thi F", age: 17, gpa: 9.1, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S07", name: "Bui Van G", age: 25, gpa: 4.9, status: "inactive", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: new Date().toLocaleString() },
+        { id: "S08", name: "Vu Thi H", age: 23, gpa: 8.4, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+        { id: "S09", name: "Dang Van I", age: 28, gpa: 7.0, status: "active", createAt: new Date().toLocaleString(), updatedAt: "", deleteAt: null },
+        { id: "S10", name: "Nguyen Thi K", age: 16, gpa: 5.5, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
+    ];
+
+    // 2. CÁC HÀM CHỨC NĂNG (MODULES)
+
+    // --- YÊU CẦU 1: QUẢN TRỊ DỮ LIỆU ---
+    function createStudent(data) {
+        let id = prompt("Nhập ID sinh viên:").trim();
+        if (data.some(s => s.id === id)) return alert("Lỗi: ID đã tồn tại!");
+
+        let name = prompt("Nhập tên sinh viên:");
+        let age = +prompt("Nhập tuổi (16-60):");
+        let gpa = +prompt("Nhập GPA (0-10):");
+        let statusInput = prompt("Chọn trạng thái: 1.Active | 2.Inactive");
+
+        if (age >= 16 && age <= 60 && gpa >= 0 && gpa <= 10) {
+            let newStudent = {
+                id, name, age, gpa,
+                status: statusInput === "1" ? "active" : "inactive",
+                createAt: new Date().toLocaleString(),
+                updateAt: "",
+                deleteAt: null
+            };
+            data.push(newStudent);
+            alert("Thêm sinh viên thành công!");
+        } else {
+            alert("Dữ liệu không hợp lệ (Tuổi 16-60, GPA 0-10)!");
+        }
+    }
+
+    function updateStudent(data) {
+        let id = prompt("Nhập ID sinh viên cần cập nhật:");
+        let student = data.find(s => s.id === id);
+        if (!student) return alert("Không tìm thấy sinh viên!");
+
+        let newName = prompt(`Tên mới (Hiện tại: ${student.name}) - Bỏ trống để giữ nguyên:`);
+        let newGpa = prompt(`GPA mới (Hiện tại: ${student.gpa}) - Bỏ trống để giữ nguyên:`);
+
+        if (newName) student.name = newName.trim();
+        if (newGpa !== "") student.gpa = Number(newGpa);
+
+        student.updateAt = new Date().toLocaleString();
+        alert("Cập nhật thành công!");
+    }
+
+    function softDeleteStudent(data) {
+        let id = prompt("Nhập ID cần xóa tạm thời:");
+        let student = data.find(s => s.id === id && s.status === "active");
+        if (student && confirm(`Bạn có chắc muốn xóa ${student.name}?`)) {
+            student.status = "inactive";
+            student.deleteAt = new Date().toLocaleString();
+            alert("Đã chuyển trạng thái sang Inactive (Soft Delete).");
+        } else alert("Không tìm thấy hoặc sinh viên đã ở trạng thái Inactive.");
+    }
+
+    function restoreStudent(data) {
+        let id = prompt("Nhập ID cần khôi phục:");
+        let student = data.find(s => s.id === id && s.status === "inactive");
+        if (student) {
+            student.status = "active";
+            student.deleteAt = null;
+            student.updateAt = new Date().toLocaleString();
+            alert("Khôi phục thành công!");
+        } else alert("Không tìm thấy sinh viên này trong thùng rác.");
+    }
+
+    function viewStudents(data) {
+        let keyword = prompt("Tìm kiếm theo tên (Bỏ trống để hiện tất cả):") || "";
+        let statusFilter = prompt("Lọc trạng thái: 1.Active | 2.Inactive | 3.All");
+        let sortOrder = prompt("Sắp xếp GPA: 1.Tăng dần | 2.Giảm dần");
+
+        let result = [...data]
+            .filter(s => s.name.toLowerCase().includes(keyword.toLowerCase()))
+            .filter(s => {
+                if (statusFilter === "1") return s.status === "active";
+                if (statusFilter === "2") return s.status === "inactive";
+                return true;
+            })
+            .sort((a, b) => sortOrder === "1" ? a.gpa - b.gpa : b.gpa - a.gpa);
+
+        const PAGE_SIZE = 5;
+        let totalPages = Math.ceil(result.length / PAGE_SIZE) || 1;
+
+        console.clear();
+        console.log(`--- DANH SÁCH SINH VIÊN (Trang 1/${totalPages}) ---`);
+        console.table(result.slice(0, PAGE_SIZE));
+        alert("Đã hiển thị danh sách trong Console (F12).");
+    }
+
+    function analyticsDashboard(data) {
+        if (data.length === 0) return alert("Chưa có dữ liệu!");
+
+        const stats = data.reduce((acc, s) => {
+            acc.total++;
+            s.status === "active" ? acc.activeCount++ : acc.inactiveCount++;
+            acc.sumGpa += s.gpa;
+
+            if (s.gpa < 3.0) acc.risks.push(s.name);
+
+            let rank = s.gpa >= 8.0 ? "Giỏi" : s.gpa >= 5.0 ? "Khá" : "Yếu";
+            acc.dist[rank] = (acc.dist[rank] || 0) + 1;
+
+            return acc;
+        }, { total: 0, activeCount: 0, inactiveCount: 0, sumGpa: 0, risks: [], dist: { "Giỏi": 0, "Khá": 0, "Yếu": 0 } });
+
+        console.clear();
+        console.log("==== THỐNG KÊ HỆ THỐNG ====");
+        console.log(`- Tổng số: ${stats.total} | Active: ${stats.activeCount} | Inactive: ${stats.inactiveCount}`);
+        console.log(`- GPA Trung bình: ${(stats.sumGpa / stats.total).toFixed(2)}`);
+        console.log(`- Sinh viên nguy cơ (GPA < 3.0): ${stats.risks.join(", ") || "Không có"}`);
+        console.log("- Phân bổ học lực:");
+        console.table(stats.dist);
+        alert("Đã hiển thị báo cáo trong Console (F12).");
+    }
+
+    let choice;
+    do {
+        choice = prompt(
+            `
+            ==== STUDENT MANAGER ADVANCED ====
+            1. Create Student
+            2. Update Student
+            3. Soft Delete Student
+            4. Restore Student
+            5. View Students (Pipeline)
+            6. Analytics Dashboard
+            7. Exit
+            `
+        );
+
+        switch (Number(choice)) {
+            case 1: createStudent(seedStudent); break;
+            case 2: updateStudent(seedStudent); break;
+            case 3: softDeleteStudent(seedStudent); break;
+            case 4: restoreStudent(seedStudent); break;
+            case 5: viewStudents(seedStudent); break;
+            case 6: analyticsDashboard(seedStudent); break;
+            case 7: alert("Hệ thống đã đóng. Tạm biệt!"); break;
+            default: if (choice !== null) alert("Lựa chọn không hợp lệ!"); break;
+        }
+    } while (Number(choice) !== 7 && choice !== null);
+</script>
