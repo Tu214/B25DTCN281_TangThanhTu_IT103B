@@ -13,9 +13,6 @@
         { id: "S10", name: "Nguyen Thi K", age: 16, gpa: 5.5, status: "active", createAt: new Date().toLocaleString(), updateAt: "", deleteAt: null },
     ];
 
-    // 2. CÁC HÀM CHỨC NĂNG (MODULES)
-
-    // --- YÊU CẦU 1: QUẢN TRỊ DỮ LIỆU ---
     function createStudent(data) {
         let id = prompt("Nhập ID sinh viên:").trim();
         if (data.some(s => s.id === id)) return alert("Lỗi: ID đã tồn tại!");
