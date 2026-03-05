@@ -1,4 +1,4 @@
-// Dữ liệu ban đầu
+
 const products = [
     { id: 1, name: "Bánh Chưng", price: 150000 },
     { id: 2, name: "Giò Lua", price: 180000 },
@@ -11,9 +11,9 @@ const products = [
 const productList = document.getElementById("product-list");
 const productForm = document.getElementById("product-form");
 
-// --- CHỨC NĂNG 1: HIỂN THỊ (READ) ---
+
 const renderProducts = () => {
-    productList.innerHTML = ""; // Dọn dẹp danh sách cũ
+    productList.innerHTML = "";
     products.forEach((p) => {
         const li = document.createElement("li");
         li.className = "product-item";
@@ -29,25 +29,22 @@ const renderProducts = () => {
             </div>
         `;
 
-        // --- CHỨC NĂNG 2: XÓA (DELETE) ---
         const deleteBtn = li.querySelector(".delete-btn");
         deleteBtn.onclick = () => {
             if (confirm(`Bạn có chắc muốn xóa "${p.name}"?`)) {
-                // Lọc bỏ sản phẩm khỏi mảng
                 products = products.filter(item => item.id !== p.id);
-                renderProducts(); // Vẽ lại giao diện
+                renderProducts();
             }
         };
 
-        // --- CHỨC NĂNG 3: SỬA GIÁ (UPDATE) ---
         const editBtn = li.querySelector(".edit-btn");
         editBtn.onclick = () => {
             const newPrice = prompt(`Nhập giá mới cho ${p.name}:`, p.price);
             if (newPrice !== null) {
                 const priceNum = parseInt(newPrice);
                 if (!isNaN(priceNum) && priceNum >= 0) {
-                    p.price = priceNum; // Cập nhật trong mảng
-                    renderProducts();   // Vẽ lại giao diện
+                    p.price = priceNum; 
+                    renderProducts();  
                 } else {
                     alert("Giá không hợp lệ!");
                 }
@@ -58,23 +55,22 @@ const renderProducts = () => {
     });
 };
 
-// --- CHỨC NĂNG 4: THÊM MỚI (CREATE) ---
 productForm.addEventListener("submit", (e) => {
-    e.preventDefault(); // Chặn load lại trang
+    e.preventDefault();
 
     const nameInput = document.getElementById("product-name");
     const priceInput = document.getElementById("product-price");
 
     const newProduct = {
-        id: Date.now(), // Tạo ID duy nhất bằng thời gian
+        id: Date.now(),
         name: nameInput.value,
         price: parseInt(priceInput.value)
     };
 
-    products.push(newProduct); // Thêm vào mảng
-    renderProducts();          // Cập nhật giao diện
+    products.push(newProduct); 
+    renderProducts();          
 
-    productForm.reset();       // Xóa trắng form
+    productForm.reset();       
 });
 
 renderProducts();
