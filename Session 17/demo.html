@@ -19,14 +19,17 @@
     </form>
 
     <script>
-        let products = [
-            { id: 1, name: "Bánh Chưng", price: 150000 },
-            { id: 2, name: "Giò Lụa", price: 180000 },
-            { id: 3, name: "Cành Đào", price: 500000 },
-            { id: 4, name: "Mứt Tet", price: 120000 },
-            { id: 5, name: "Bao Lì Xì", price: 25000 },
-            { id: 6, name: "Dưa Hấu Tết", price: 80000 },
-        ];
+        const products = JSON.parse(localStorage.getItem("product"))
+        // const products = [
+        //     { id: 1, name: "Bánh Chưng", price: 150000 },
+        //     { id: 2, name: "Giò Lụa", price: 180000 },
+        //     { id: 3, name: "Cành Đào", price: 500000 },
+        //     { id: 4, name: "Mứt Tet", price: 120000 },
+        //     { id: 5, name: "Bao Lì Xì", price: 25000 },
+        //     { id: 6, name: "Dưa Hấu Tết", price: 80000 },
+        // ]; 
+
+        // localStorage.setItem("product", JSON.stringify(products))
 
         function renderProduct() {
             let productListElement = document.getElementById('product-list')
@@ -37,8 +40,6 @@
                 <div class="product">
                     <p>Tên sản phẩm:${products.name}</p>
                     <p>Giá sản phẩm:${products.price}</p>
-                    <button>Sửa</button>
-                    <button onclick = "handleDeleteProduct(${products.id})">Xoá</button>
                 </div>
             </li>`
             })
@@ -51,22 +52,17 @@
             let priceInputElement = document.getElementById("product-price")
             let newProductName = nameInputElement.value
             let newProductPrice = +priceInputElement.value
-            
+
             let newProduct = {
-                id:products.length != 0 ? products[products.length - 1].id + 1 : 1, // nếu độ mảng khác 0 lấy id cuối cùng cộng 1, nếu độ dài mảng bằng 0 id = 1
-                name:newProductName,
-                price:newProductPrice
+                id: products.length != 0 ? products[products.length - 1].id + 1 : 1, // nếu độ mảng khác 0 lấy id cuối cùng cộng 1, nếu độ dài mảng bằng 0 id = 1
+                name: newProductName,
+                price: newProductPrice
             }
             products.push(newProduct)
+            localStorage.setItem("product", JSON.stringify(products)); // lưu dữ liệu vào trong kho 
             renderProduct();
         }
 
-        function handleDeleteProduct(id) {
-            products = products.filter(product => product.id !== id)
-            renderProduct();
-        }
-
-        
     </script>
 </body>
 

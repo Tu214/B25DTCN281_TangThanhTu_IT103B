@@ -210,10 +210,6 @@ body {
     display: none;
 }
 
-.task-item.editing .task-actions {
-    display: none;
-}
-
 .task-edit-input {
     flex: 1;
     padding: 8px 12px;
