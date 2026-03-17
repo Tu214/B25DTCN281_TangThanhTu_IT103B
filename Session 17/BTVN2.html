@@ -91,6 +91,37 @@
             color: #777;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
+
+        .task-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .task-input-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .task-input-row button {
+            border: none;
+            background-color: #ff8f1c;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .task-input-row button:hover {
+            transform: translateY(-1px);
+            background-color: #e07b00;
+        }
     </style>
 </head>
 
@@ -101,7 +132,13 @@
             <h1>Chuẩn bị Tết Nguyên Đán</h1>
             <p>Click để hoàn thành công việc</p>
         </div>
-        <div class="content" id="todo-container"></div>
+        <div class="content">
+            <div class="task-input-row">
+                <input type="text" id="new-task" placeholder="Nhập công việc mới..." />
+                <button id="add-task">Thêm</button>
+            </div>
+            <div id="todo-container"></div>
+        </div>
         <div class="footer">Dữ liệu tự động lưu vào localStorage</div>
     </div>
 
@@ -116,30 +153,28 @@
 
         ];
 
-        // 1. ĐỌC DỮ LIỆU: Lấy từ localStorage, nếu không có thì dùng initialTodos
         let todos = JSON.parse(localStorage.getItem("myTodos"));
 
-        if (!todos) {
+        if (!Array.isArray(todos)) {
             todos = initialTodos;
             localStorage.setItem("myTodos", JSON.stringify(todos));
         }
 
-        // 2. HÀM HIỂN THỊ (RENDER)
+        const inputEl = document.getElementById("new-task");
+        const addBtn = document.getElementById("add-task");
+
         function render() {
             const container = document.getElementById("todo-container");
-            container.innerHTML = ""; // Xóa nội dung cũ
+            container.innerHTML = "";
 
             todos.forEach((item, index) => {
                 const taskDiv = document.createElement("div");
-                // Nếu done là true, thêm class 'completed'
                 taskDiv.className = `task-item ${item.done ? 'completed' : ''}`;
 
                 taskDiv.innerHTML = `
                     <span class="task-name">🌸 ${item.task}</span>
                     <span class="status-icon">${item.done ? "Hoàn thành" : "Chưa hoàn thành"}</span>
                 `;
-
-                // 3. XỬ LÝ CLICK: Đổi trạng thái và lưu trữ
                 taskDiv.onclick = function () {
                     toggleTask(index);
                 };
@@ -148,19 +183,19 @@
             });
         }
 
-        // 4. HÀM ĐỔI TRẠNG THÁI
         function toggleTask(index) {
-            // Đảo ngược giá trị done (true thành false và ngược lại)
             todos[index].done = !todos[index].done;
-
-            // Cập nhật lại localStorage
             localStorage.setItem("myTodos", JSON.stringify(todos));
-
-            // Vẽ lại giao diện
             render();
         }
 
-        // Khởi chạy lần đầu
+        addBtn.addEventListener("click", addTask);
+        inputEl.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                addTask();
+            }
+        });
+
         render();
     </script>
 </body>

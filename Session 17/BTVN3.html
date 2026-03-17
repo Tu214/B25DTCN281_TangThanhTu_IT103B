@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do Tết Thông Minh</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff8e2;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #d43131;
+            color: white;
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Style cho từng công việc */
+        .task-item {
+            background-color: #fff;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 8px solid #ec8108;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            /* Ngăn bôi đen chữ khi click nhanh */
+        }
+
+        .task-item:hover {
+            transform: scale(1.02);
+        }
+
+        /* Class dành cho công việc đã hoàn thành */
+        .task-item.completed {
+            border-left-color: #2ecc71;
+            /* Đổi sang màu xanh */
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-name {
+            text-decoration: line-through;
+            /* Gạch ngang chữ */
+            color: #888;
+        }
+
+        .task-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .status-icon {
+            font-size: 18px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .task-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .task-input-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .task-input-row button {
+            border: none;
+            background-color: #ff8f1c;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .task-input-row button:hover {
+            transform: translateY(-1px);
+            background-color: #e07b00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="header">
+            <h1>Chuẩn bị Tết Nguyên Đán</h1>
+            <p>Click để hoàn thành công việc</p>
+        </div>
+        <div class="content">
+            <div class="task-input-row">
+                <input type="text" id="new-task" placeholder="Nhập công việc mới..." />
+                <button id="add-task">Thêm</button>
+            </div>
+            <div id="todo-container"></div>
+        </div>
+        <div class="footer">Dữ liệu tự động lưu vào localStorage</div>
+    </div>
+
+    <script>
+        const initialTodos = [
+            { id: 1, task: "Mua banh chung", done: false },
+            { id: 2, task: "Don nha đón Tết", done: false },
+            { id: 3, task: "Goi banh chung", done: false },
+            { id: 4, task: "Trang trí nha cửa bang hoa mai, hoa dao", done: false },
+            { id: 5, task: "Mua phong bao li xi", done: false },
+            { id: 6, task: "Chuẩn bị mâm ngũ quá", done: false },
+
+        ];
+
+        let todos = JSON.parse(localStorage.getItem("myTodos"));
+
+        if (!Array.isArray(todos)) {
+            todos = initialTodos;
+            localStorage.setItem("myTodos", JSON.stringify(todos));
+        }
+
+        const inputEl = document.getElementById("new-task");
+        const addBtn = document.getElementById("add-task");
+
+        function render() {
+            const container = document.getElementById("todo-container");
+            container.innerHTML = "";
+
+            todos.forEach((item, index) => {
+                const taskDiv = document.createElement("div");
+                taskDiv.className = `task-item ${item.done ? 'completed' : ''}`;
+
+                taskDiv.innerHTML = `
+                    <span class="task-name">🌸 ${item.task}</span>
+                    <span class="status-icon">${item.done ? "Hoàn thành" : "Chưa hoàn thành"}</span>
+                `;
+                taskDiv.onclick = function () {
+                    toggleTask(index);
+                };
+
+                container.appendChild(taskDiv);
+            });
+        }
+
+        function addTask() {
+            const value = inputEl.value.trim();
+            if (!value) {
+                alert("Vui lòng nhập công việc hợp lệ.");
+                return;
+            }
+
+            const nextId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+            todos.unshift({ id: nextId, task: value, done: false });
+            localStorage.setItem("myTodos", JSON.stringify(todos));
+            inputEl.value = "";
+            render();
+        }
+
+        function toggleTask(index) {
+            todos[index].done = !todos[index].done;
+            localStorage.setItem("myTodos", JSON.stringify(todos));
+            render();
+        }
+
+        addBtn.addEventListener("click", addTask);
+        inputEl.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                addTask();
+            }
+        });
+
+        render();
+    </script>
+</body>
+
+</html>
