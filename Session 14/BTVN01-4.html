@@ -37,7 +37,7 @@
                 <div class="product">
                     <p>Tên sản phẩm:${products.name}</p>
                     <p>Giá sản phẩm:${products.price}</p>
-                    <button>Sửa</button>
+                    <button class="edit-price-btn" onclick = "handleUppdateProduct(${products.id})">Sửa giá</button>
                     <button onclick = "handleDeleteProduct(${products.id})">Xoá</button>
                 </div>
             </li>`
@@ -51,11 +51,11 @@
             let priceInputElement = document.getElementById("product-price")
             let newProductName = nameInputElement.value
             let newProductPrice = +priceInputElement.value
-            
+
             let newProduct = {
-                id:products.length != 0 ? products[products.length - 1].id + 1 : 1, // nếu độ mảng khác 0 lấy id cuối cùng cộng 1, nếu độ dài mảng bằng 0 id = 1
-                name:newProductName,
-                price:newProductPrice
+                id: products.length != 0 ? products[products.length - 1].id + 1 : 1, // nếu độ mảng khác 0 lấy id cuối cùng cộng 1, nếu độ dài mảng bằng 0 id = 1
+                name: newProductName,
+                price: newProductPrice
             }
             products.push(newProduct)
             renderProduct();
@@ -64,6 +64,30 @@
         function handleDeleteProduct(id) {
             products = products.filter(product => product.id !== id)
             renderProduct();
+        }
+
+        function handleUppdateProduct(id) {
+          
+            let productIndex = products.findIndex(p => p.id === id);
+
+            if (productIndex !== -1) {
+                let oldName = products[productIndex].name;
+                let oldPrice = products[productIndex].price;
+
+                let newName = prompt("Nhập tên mới cho sản phẩm:", oldName);
+
+                if (newName === null) return;
+
+                let newPriceRaw = prompt("Nhập giá mới cho sản phẩm:", oldPrice);
+                if (newPriceRaw === null) return;
+
+                let newPrice = Number(newPriceRaw);
+
+                products[productIndex].name = newName.trim() || oldName;
+                products[productIndex].price = isNaN(newPrice) ? oldPrice : newPrice;
+
+                renderProduct();
+            }
         }
 
         
