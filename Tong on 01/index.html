@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Mini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #527b4d;
+            color: white;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: #434343;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1DB954;
+            margin-top: 0;
+        }
+
+        .form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        .form button {
+            padding: 10px 20px;
+            background: #1DB954;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .form button:hover {
+            background: #1ed760;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 15px 0 25px 0;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #282828;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #181818;
+            color: #b3b3b3;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        td,
+        th {
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        tr {
+            border-bottom: 1px solid #333;
+        }
+
+        tr:last-child {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #333;
+        }
+
+        /* Action Buttons in Table */
+        td button {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        td button:nth-child(1) {
+            background: #1DB954;
+            color: white;
+        }
+
+        td button:nth-child(2) {
+            background: #e74c3c;
+            color: white;
+        }
+
+        td button:hover {
+            opacity: 0.8;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #b3b3b3;
+            font-style: italic;
+        }
+
+        /* Custom Modal UI */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: #282828;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-box p {
+            margin: 0 0 20px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .btn-cancel {
+            background: #555;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #666;
+        }
+
+        .btn-confirm {
+            background: #1DB954;
+            color: white;
+        }
+
+        .btn-confirm.danger {
+            background: #e74c3c;
+        }
+
+        .btn-confirm:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 id="formTitle">🎵 Thêm bài hát</h2>
+
+        <div class="form">
+            <input type="text" id="title" placeholder="Tên bài hát">
+            <input type="text" id="artist" placeholder="Ca sĩ">
+            <button onclick="handleSubmit()" id="submitBtn">Thêm</button>
+        </div>
+
+        <input type="text" id="search" placeholder="🔍 Tìm theo tên bài hát..." oninput="searchSong()">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên bài hát</th>
+                    <th>Ca sĩ</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="songTable">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <p id="modalMessage">Thông báo</p>
+            <div class="modal-actions">
+                <button id="modalBtnCancel" class="btn-cancel">Hủy</button>
+                <button id="modalBtnConfirm" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let songs = JSON.parse(localStorage.getItem('songs')) || [];
+        let editingId = null;
+
+        function showModal(message, isConfirm = false, onConfirm = null) {
+            const overlay = document.getElementById('modalOverlay');
+            const msgEl = document.getElementById('modalMessage');
+            const btnCancel = document.getElementById('modalBtnCancel');
+            const btnConfirm = document.getElementById('modalBtnConfirm');
+
+            msgEl.innerText = message;
+            overlay.style.display = 'flex';
+
+            if (isConfirm) {
+                btnCancel.style.display = 'inline-block';
+                btnConfirm.className = 'btn-confirm danger';
+                btnConfirm.innerText = 'Xóa';
+            } else {
+                btnCancel.style.display = 'none';
+                btnConfirm.className = 'btn-confirm';
+                btnConfirm.innerText = 'OK';
+            }
+
+            btnConfirm.onclick = () => {
+                overlay.style.display = 'none';
+                if (onConfirm) onConfirm();
+            };
+
+            btnCancel.onclick = () => {
+                overlay.style.display = 'none';
+            };
+        }
+
+        function renderTable(dataToRender = songs) {
+            const tbody = document.getElementById('songTable');
+            tbody.innerHTML = '';
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty-message">Không có bài hát nào!</td></tr>`;
+                return;
+            }
+
+            dataToRender.forEach(song => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>${song.id}</td>
+                <td>${song.title}</td>
+                <td>${song.artist}</td>
+                <td>
+                    <button onclick="editSong(${song.id})">Sửa</button>
+                    <button onclick="deleteSong(${song.id})">Xóa</button>
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleSubmit() {
+            const titleInput = document.getElementById('title');
+            const artistInput = document.getElementById('artist');
+
+            const title = titleInput.value.trim();
+            const artist = artistInput.value.trim();
+
+            if (!title || !artist) {
+                showModal('Vui lòng nhập đầy đủ tên bài hát và ca sĩ!');
+                return;
+            }
+
+            if (editingId) {
+                const index = songs.findIndex(s => s.id === editingId);
+                if (index !== -1) {
+                    songs[index].title = title;
+                    songs[index].artist = artist;
+                }
+
+                editingId = null;
+                document.getElementById('formTitle').innerText = '🎵 Thêm bài hát';
+                document.getElementById('submitBtn').innerText = 'Thêm';
+            } else {
+                const newId = songs.length > 0 ? Math.max(...songs.map(s => s.id)) + 1 : 1;
+                songs.push({ id: newId, title, artist });
+            }
+
+            saveData();
+            resetForm();
+            renderTable();
+
+            document.getElementById('search').value = '';
+        }
+
+        function editSong(id) {
+            const song = songs.find(s => s.id === id);
+            if (song) {
+                document.getElementById('title').value = song.title;
+                document.getElementById('artist').value = song.artist;
+
+                editingId = id;
+                document.getElementById('formTitle').innerText = '🎵 Sửa bài hát';
+                document.getElementById('submitBtn').innerText = 'Cập nhật';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function deleteSong(id) {
+            showModal('Bạn có chắc chắn muốn xóa bài hát này?', true, () => {
+                songs = songs.filter(s => s.id !== id);
+
+                if (editingId === id) {
+                    resetForm();
+                    editingId = null;
+                    document.getElementById('formTitle').innerText = '🎵 Thêm bài hát';
+                    document.getElementById('submitBtn').innerText = 'Thêm';
+                }
+
+                saveData();
+
+                searchSong();
+            });
+        }
+        function searchSong() {
+            const keyword = document.getElementById('search').value.toLowerCase();
+            const filteredSongs = songs.filter(song =>
+                song.title.toLowerCase().includes(keyword)
+            );
+            renderTable(filteredSongs);
+        }
+
+        function saveData() {
+            localStorage.setItem('songs', JSON.stringify(songs));
+        }
+
+        function resetForm() {
+            document.getElementById('title').value = '';
+            document.getElementById('artist').value = '';
+        }
+
+        window.onload = () => {
+            renderTable();
+        };
+
+    </script>
+</body>
+
+</html>
