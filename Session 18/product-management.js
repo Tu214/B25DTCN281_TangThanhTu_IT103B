@@ -106,7 +106,7 @@ function renderProduct() {
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" data-id="${p.id}">✏️ Sửa</button>
-                            <button class="btn-delete" data-id="${p.id}">🗑️ Xóa</button>
+                            <button class="btn-delete" data-id="${p.id}" onClick ="handleDelete(${p.id})">🗑️ Xóa</button>
                         </div>
                     </td>
                 </tr>
@@ -121,12 +121,12 @@ function renderProduct() {
     totalValue.textContent = formatCurrency(total);
     totalQuantity.textContent = qty;
 
-    document.querySelectorAll('.btn-delete').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const id = Number(btn.dataset.id);
-            handleDelete(id);
-        });
-    });
+    // document.querySelectorAll('.btn-delete').forEach((btn) => {
+    //     btn.addEventListener('click', () => {
+    //         const id = Number(btn.dataset.id);
+    //         handleDelete(id);
+    //     });
+    // });
 
     document.querySelectorAll('.btn-edit').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -161,18 +161,34 @@ function validateForm(name, category, price, quantity) {
 }
 
 function handleDelete(id) {
-    const product = products.find((p) => p.id === id);
-    if (!product) return;
+    
+    // const product = products.find((p) => p.id === id);
+    // if (!product) return;
 
-    const confirmed = confirm(`Bạn có chắc muốn xóa sản phẩm "${product.name}" không?`);
-    if (!confirmed) return;
+    // const confirmed = confirm(`Bạn có chắc muốn xóa sản phẩm "${product.name}" không?`);
+    // if (!confirmed) return;
 
-    products = products.filter((p) => p.id !== id);
-    if (editingProductId === id) {
-        resetForm();
+    // products = products.filter((p) => p.id !== id);
+    // if (editingProductId === id) {
+    //     resetForm();
+    // }
+    // saveData();
+    // renderProduct();
+
+    const findProduct = products.findIndex(p => p.id === id)
+    console.log(findProduct);
+    // if (!findProduct) {
+    //     return
+    // }
+   
+    const confirm = window.confirm("xác nhận xoá")
+    if (!confirm) {
+        return
     }
+    products.splice(findProduct,1)
+    renderProduct()
     saveData();
-    renderProduct();
+
 }
 
 function handleEdit(id) {
